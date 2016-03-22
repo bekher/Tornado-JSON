@@ -111,12 +111,13 @@ def validate(input_schema=None, output_schema=None,
                     # We essentially re-raise this as a TypeError because
                     #  we don't want this error data passed back to the client
                     #  because it's a fault on our end. The client should
-                    #  only see a 500 - Internal Server Error.
+                    #  only see a 500 - Inteal Server Error.
                     raise TypeError(str(e))
 
-            # If no ValidationError has been raised up until here, we write
-            #  back output
-            self.success(output)
+            # If no ValidationError has been raised up until here, and
+            #  we have not already written a response, write output
+            if not self._finished:
+                self.success(output)
 
         setattr(_wrapper, "input_schema", input_schema)
         setattr(_wrapper, "output_schema", output_schema)
